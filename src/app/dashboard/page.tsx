@@ -5,7 +5,8 @@ import { useAppStore } from "@/store/appStore";
 import { ProductForm } from "@/components/forms/ProductForm";
 import { SalesPagePreview } from "@/components/preview/SalesPagePreview";
 import { ProductInput, SalesPageOutput } from "@/types";
-import { generateExportHTML } from "@/lib/exportHtml";
+
+import { Eye } from "lucide-react";
 
 export default function DashboardPage() {
   const {
@@ -59,18 +60,18 @@ export default function DashboardPage() {
     await handleGenerate(lastInput);
   };
 
-  const handleExport = () => {
+  const handlePreview = () => {
     if (!output || (!lastInput && !input)) return;
 
     const productName = lastInput?.productName ?? input?.productName ?? "";
-    const html = generateExportHTML(output, productName, selectedTemplate);
-    const blob = new Blob([html], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${productName.replace(/\s+/g, "-").toLowerCase()}-sales-page.html`;
-    a.click();
-    URL.revokeObjectURL(url);
+
+    const encodedData = encodeURIComponent(JSON.stringify(output));
+
+    const url = `/export?data=${encodedData}&productName=${encodeURIComponent(
+      productName,
+    )}&template=${selectedTemplate}`;
+
+    window.open(url, "_blank");
   };
 
   return (
@@ -120,10 +121,10 @@ export default function DashboardPage() {
                     ↻ Regenerate
                   </button>
                   <button
-                    onClick={handleExport}
-                    className="btn-primary text-sm py-2"
+                    onClick={handlePreview}
+                    className="btn-primary text-sm py-2 flex items-center gap-2"
                   >
-                    ↓ Export HTML
+                    <Eye /> Preview Page
                   </button>
                 </div>
               </div>

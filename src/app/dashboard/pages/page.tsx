@@ -6,7 +6,7 @@ import { SavedPage } from "@/types";
 import { useAppStore } from "@/store/appStore";
 import { generateExportHTML } from "@/lib/exportHtml";
 
-import { Eye, RefreshCw, Download, Trash2 } from "lucide-react";
+import { Eye, RefreshCw, Download, Trash2, Pencil } from "lucide-react";
 
 export default function PagesPage() {
   const router = useRouter();
@@ -58,19 +58,16 @@ export default function PagesPage() {
     router.push("/dashboard");
   };
 
-  const handleExport = (page: SavedPage) => {
-    const html = generateExportHTML(
-      page.outputData,
+  const handlePreview = (page: SavedPage) => {
+    if (!page.outputData) return;
+
+    const encodedData = encodeURIComponent(JSON.stringify(page.outputData));
+
+    const url = `/export?data=${encodedData}&productName=${encodeURIComponent(
       page.productName,
-      page.template,
-    );
-    const blob = new Blob([html], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${page.productName.replace(/\s+/g, "-").toLowerCase()}-sales-page.html`;
-    a.click();
-    URL.revokeObjectURL(url);
+    )}&template=${page.template}`;
+
+    window.open(url, "_blank");
   };
 
   if (loading) {
@@ -148,14 +145,24 @@ export default function PagesPage() {
                 </div>
 
                 <div className="flex gap-2 shrink-0">
-                  {/* View */}
+                  {/* Edit */}
                   <button
                     onClick={() => handleView(page)}
                     className="btn-secondary flex items-center justify-center p-2 sm:px-4 sm:py-2"
                     title="View"
                   >
+                    <Pencil size={16} />
+                    <span className="hidden md:inline ml-2">Edit</span>
+                  </button>
+
+                  {/* Preview */}
+                  <button
+                    onClick={() => handlePreview(page)}
+                    className="btn-secondary flex items-center justify-center p-2 sm:px-4 sm:py-2"
+                    title="Export"
+                  >
                     <Eye size={16} />
-                    <span className="hidden md:inline ml-2">View</span>
+                    <span className="hidden md:inline ml-2">Preview</span>
                   </button>
 
                   {/* Regenerate */}
@@ -174,16 +181,6 @@ export default function PagesPage() {
                     <span className="hidden md:inline ml-2">
                       {regeneratingId === page.id ? "..." : "Regenerate"}
                     </span>
-                  </button>
-
-                  {/* Export */}
-                  <button
-                    onClick={() => handleExport(page)}
-                    className="btn-secondary flex items-center justify-center p-2 sm:px-4 sm:py-2"
-                    title="Export"
-                  >
-                    <Download size={16} />
-                    <span className="hidden md:inline ml-2">Export</span>
                   </button>
 
                   {/* Delete */}

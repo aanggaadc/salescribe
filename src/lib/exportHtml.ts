@@ -3,7 +3,7 @@ import { SalesPageOutput } from "@/types";
 export function generateExportHTML(
   data: SalesPageOutput,
   productName: string,
-  template: string = "modern"
+  template: string = "modern",
 ): string {
   const colors = {
     modern: { primary: "#8b5cf6", bg: "#0f172a", accent: "#c084fc" },
@@ -20,7 +20,8 @@ export function generateExportHTML(
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: system-ui, -apple-system, sans-serif; color: #111; }
-    .hero { background: ${colors.bg}; color: white; padding: 6rem 2rem; text-align: center; }
+    .hero { background: ${colors.bg}; }
+    .hero-inner {padding: 6rem 2rem; text-align: center; max-width: 56rem; margin-inline: auto}
     .hero h1 { font-size: clamp(2rem, 5vw, 4rem); font-weight: 800; margin-bottom: 1.5rem; }
     .hero p { font-size: 1.25rem; opacity: 0.8; max-width: 600px; margin: 0 auto 2.5rem; }
     .cta-btn { background: ${colors.primary}; color: white; padding: 1rem 2.5rem; border: none; border-radius: 9999px; font-size: 1.1rem; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; }
@@ -36,10 +37,12 @@ export function generateExportHTML(
 </head>
 <body>
   <div class="hero">
+  <div class="hero-inner">
     <p style="color:${colors.accent}; font-size:0.875rem; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:1rem;">${productName}</p>
     <h1>${data.headline}</h1>
     <p>${data.subheadline}</p>
     <a href="#" class="cta-btn">${data.cta}</a>
+    </div>
   </div>
 
   <section>
