@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import { ProductInput, SalesPageOutput, Template } from "@/types";
 
 interface AppStore {
@@ -34,32 +33,21 @@ const initialInput: Partial<ProductInput> = {
   uniqueSellingPoints: [""],
 };
 
-export const useAppStore = create<AppStore>()(
-  persist(
-    (set) => ({
-      input: initialInput,
-      setInput: (data) =>
-        set((state) => ({ input: { ...state.input, ...data } })),
-      resetInput: () => set({ input: initialInput }),
+export const useAppStore = create<AppStore>((set) => ({
+  input: initialInput,
+  setInput: (data) =>
+    set((state) => ({ input: { ...state.input, ...data } })),
+  resetInput: () => set({ input: initialInput }),
 
-      output: null,
-      setOutput: (data) => set({ output: data }),
+  output: null,
+  setOutput: (data) => set({ output: data }),
 
-      isGenerating: false,
-      setIsGenerating: (val) => set({ isGenerating: val }),
+  isGenerating: false,
+  setIsGenerating: (val) => set({ isGenerating: val }),
 
-      selectedTemplate: "modern",
-      setSelectedTemplate: (template) => set({ selectedTemplate: template }),
+  selectedTemplate: "modern",
+  setSelectedTemplate: (template) => set({ selectedTemplate: template }),
 
-      currentPageId: null,
-      setCurrentPageId: (id) => set({ currentPageId: id }),
-    }),
-    {
-      name: "salescribe-store",
-      partialize: (state) => ({
-        input: state.input,
-        selectedTemplate: state.selectedTemplate,
-      }),
-    }
-  )
-);
+  currentPageId: null,
+  setCurrentPageId: (id) => set({ currentPageId: id }),
+}));

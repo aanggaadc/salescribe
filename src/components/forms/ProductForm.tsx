@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppStore } from "@/store/appStore";
 import { productInputSchema } from "@/lib/validations";
 import { ProductInput } from "@/types";
@@ -10,14 +10,21 @@ interface ProductFormProps {
 }
 
 export function ProductForm({ onGenerate }: ProductFormProps) {
-  const { input, setInput, isGenerating, selectedTemplate, setSelectedTemplate } = useAppStore();
+  const {
+    input,
+    output,
+    setInput,
+    isGenerating,
+    selectedTemplate,
+    setSelectedTemplate,
+  } = useAppStore();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [features, setFeatures] = useState<string[]>(
-    input.features?.length ? input.features : [""]
+    input.features?.length ? input.features : [""],
   );
   const [usps, setUsps] = useState<string[]>(
-    input.uniqueSellingPoints?.length ? input.uniqueSellingPoints : [""]
+    input.uniqueSellingPoints?.length ? input.uniqueSellingPoints : [""],
   );
 
   const updateFeature = (i: number, val: string) => {
@@ -32,7 +39,8 @@ export function ProductForm({ onGenerate }: ProductFormProps) {
     setUsps(updated);
   };
 
-  const addFeature = () => features.length < 10 && setFeatures([...features, ""]);
+  const addFeature = () =>
+    features.length < 10 && setFeatures([...features, ""]);
   const removeFeature = (i: number) =>
     features.length > 1 && setFeatures(features.filter((_, idx) => idx !== i));
 
@@ -74,6 +82,16 @@ export function ProductForm({ onGenerate }: ProductFormProps) {
     { id: "minimal", label: "Minimal", desc: "Simple, elegant" },
   ];
 
+  useEffect(() => {
+    setFeatures(input.features?.length ? input.features : [""]);
+  }, [input.features]);
+
+  useEffect(() => {
+    setUsps(
+      input.uniqueSellingPoints?.length ? input.uniqueSellingPoints : [""],
+    );
+  }, [input.uniqueSellingPoints]);
+
   return (
     <form onSubmit={handleSubmit} className="space-y-7">
       {/* Product Name */}
@@ -81,7 +99,7 @@ export function ProductForm({ onGenerate }: ProductFormProps) {
         <label className="label">Product / Service Name *</label>
         <input
           name="productName"
-          defaultValue={input.productName}
+          value={input.productName}
           placeholder="e.g. TaskFlow Pro, Overnight Oats Meal Kit"
           className={`input-field ${errors.productName ? "border-red-500/60 focus:ring-red-500/30" : ""}`}
         />
@@ -95,7 +113,7 @@ export function ProductForm({ onGenerate }: ProductFormProps) {
         <label className="label">Product Description *</label>
         <textarea
           name="description"
-          defaultValue={input.description}
+          value={input.description}
           rows={4}
           placeholder="Describe what your product does, how it works, and what problem it solves..."
           className={`input-field resize-none ${errors.description ? "border-red-500/60" : ""}`}
@@ -148,7 +166,7 @@ export function ProductForm({ onGenerate }: ProductFormProps) {
         <label className="label">Target Audience *</label>
         <input
           name="targetAudience"
-          defaultValue={input.targetAudience}
+          value={input.targetAudience}
           placeholder="e.g. Busy professionals aged 25-45 who want to eat healthy but lack time"
           className={`input-field ${errors.targetAudience ? "border-red-500/60" : ""}`}
         />
@@ -162,7 +180,7 @@ export function ProductForm({ onGenerate }: ProductFormProps) {
         <label className="label">Price / Pricing Model *</label>
         <input
           name="price"
-          defaultValue={input.price}
+          value={input.price}
           placeholder="e.g. $29/month, $199 one-time, Free with premium at $49/year"
           className={`input-field ${errors.price ? "border-red-500/60" : ""}`}
         />
@@ -205,7 +223,9 @@ export function ProductForm({ onGenerate }: ProductFormProps) {
           </button>
         )}
         {errors.uniqueSellingPoints && (
-          <p className="text-red-400 text-xs mt-1">{errors.uniqueSellingPoints}</p>
+          <p className="text-red-400 text-xs mt-1">
+            {errors.uniqueSellingPoints}
+          </p>
         )}
       </div>
 
@@ -224,27 +244,31 @@ export function ProductForm({ onGenerate }: ProductFormProps) {
                   : "border-obsidian-700/60 bg-obsidian-900/40 text-obsidian-300 hover:border-obsidian-600"
               }`}
             >
-              <div className="font-display font-semibold text-sm">{t.label}</div>
+              <div className="font-display font-semibold text-sm">
+                {t.label}
+              </div>
               <div className="text-xs opacity-70 mt-0.5">{t.desc}</div>
             </button>
           ))}
         </div>
       </div>
 
-      <button
-        type="submit"
-        disabled={isGenerating}
-        className="btn-primary w-full flex items-center justify-center gap-3 py-4 text-base"
-      >
-        {isGenerating ? (
-          <>
-            <span className="w-5 h-5 border-2 border-obsidian-800/30 border-t-obsidian-900 rounded-full animate-spin" />
-            Generating your sales page...
-          </>
-        ) : (
-          <>✨ Generate Sales Page</>
-        )}
-      </button>
+      {!output && (
+        <button
+          type="submit"
+          disabled={isGenerating}
+          className="btn-primary w-full flex items-center justify-center gap-3 py-4 text-base"
+        >
+          {isGenerating ? (
+            <>
+              <span className="w-5 h-5 border-2 border-obsidian-800/30 border-t-obsidian-900 rounded-full animate-spin" />
+              Generating your sales page...
+            </>
+          ) : (
+            <>✨ Generate Sales Page</>
+          )}
+        </button>
+      )}
     </form>
   );
 }

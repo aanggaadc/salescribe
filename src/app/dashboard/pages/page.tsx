@@ -51,7 +51,7 @@ export default function PagesPage() {
     setRegeneratingId(null);
   };
 
-  const handleView = (page: SavedPage) => {
+  const handleEdit = (page: SavedPage) => {
     setOutput(page.outputData);
     setInput(page.inputData);
     setCurrentPageId(page.id);
@@ -147,7 +147,7 @@ export default function PagesPage() {
                 <div className="flex gap-2 shrink-0">
                   {/* Edit */}
                   <button
-                    onClick={() => handleView(page)}
+                    onClick={() => handleEdit(page)}
                     className="btn-secondary flex items-center justify-center p-2 sm:px-4 sm:py-2"
                     title="View"
                   >

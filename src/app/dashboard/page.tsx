@@ -12,6 +12,7 @@ export default function DashboardPage() {
   const {
     input,
     output,
+    resetInput,
     setOutput,
     setIsGenerating,
     selectedTemplate,
@@ -53,6 +54,16 @@ export default function DashboardPage() {
     } finally {
       setIsGenerating(false);
     }
+  };
+  const handleGenerateNew = () => {
+    resetInput();
+    setOutput(null);
+    setCurrentPageId(null);
+    setLastInput(null);
+    setSaved(false);
+    setError("");
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleRegenerate = async () => {
@@ -109,6 +120,13 @@ export default function DashboardPage() {
                   Live Preview
                 </h2>
                 <div className="flex gap-2">
+                  <button
+                    onClick={handleGenerateNew}
+                    className="btn-secondary text-sm py-2"
+                  >
+                    + Generate New
+                  </button>
+
                   {saved && (
                     <span className="text-xs text-volt-400 bg-volt-400/10 border border-volt-400/20 px-3 py-1.5 rounded-full font-medium">
                       ✓ Auto-saved
