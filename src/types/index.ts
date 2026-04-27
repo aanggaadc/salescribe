@@ -33,13 +33,12 @@ export interface SavedPage {
 
 export interface SavedPageRaw {
   id: string;
-  userId: string;
   productName: string;
   inputData: string;
   outputData: string;
   template: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type Template = "modern" | "bold" | "minimal";

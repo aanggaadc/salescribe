@@ -5,10 +5,9 @@ import { generateSalesPage } from "@/lib/gemini";
 import { prisma } from "@/lib/prisma";
 import { ProductInput } from "@/types";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function GET(req: NextRequest, context: any) {
+  const { params } = context as { params: { id: string } };
+
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -32,10 +31,9 @@ export async function GET(
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function DELETE(req: NextRequest, context: any) {
+  const { params } = context as { params: { id: string } };
+
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -55,10 +53,9 @@ export async function DELETE(
   }
 }
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function PATCH(req: NextRequest, context: any) {
+  const { params } = context as { params: { id: string } };
+
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
