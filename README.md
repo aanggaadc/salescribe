@@ -4,7 +4,7 @@ Transform raw product information into high-converting sales pages using Google 
 
 ## Tech Stack
 - **Next.js 15** (App Router)
-- **SQLite + Prisma** (Database)
+- **Supabase (PostgreSQL) — Database + optional Auth/Storage
 - **Zustand** (State Management)
 - **NextAuth v4** (Authentication)
 - **Tailwind CSS** (Styling)
