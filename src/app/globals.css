@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  ::selection {
+    background-color: #c1ff1a;
+    color: #06061a;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0d0d30;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #333375;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #40408c;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10;
+  }
+
+  .glass-dark {
+    @apply bg-obsidian-900/80 backdrop-blur-xl border border-obsidian-700/50;
+  }
+
+  .btn-primary {
+    @apply bg-volt-300 text-obsidian-950 font-semibold font-display px-6 py-3 rounded-xl
+    hover:bg-volt-200 active:scale-95 transition-all duration-200 
+    focus:outline-none focus:ring-2 focus:ring-volt-300/50 focus:ring-offset-2 focus:ring-offset-obsidian-950
+    disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
+  }
+
+  .btn-secondary {
+    @apply bg-obsidian-800 text-white font-semibold font-display px-6 py-3 rounded-xl
+    hover:bg-obsidian-700 active:scale-95 transition-all duration-200 border border-obsidian-600
+    focus:outline-none focus:ring-2 focus:ring-obsidian-500/50 focus:ring-offset-2 focus:ring-offset-obsidian-950
+    disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply text-obsidian-200 font-medium font-display px-4 py-2 rounded-lg
+    hover:bg-white/5 hover:text-white active:scale-95 transition-all duration-200
+    focus:outline-none;
+  }
+
+  .input-field {
+    @apply w-full bg-obsidian-900/60 border border-obsidian-700/60 rounded-xl px-4 py-3
+    text-white placeholder-obsidian-400 font-body
+    focus:outline-none focus:ring-2 focus:ring-volt-400/40 focus:border-volt-400/60
+    transition-all duration-200;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-obsidian-200 mb-2 font-display;
+  }
+
+  .card {
+    @apply bg-obsidian-900/60 border border-obsidian-700/40 rounded-2xl p-6
+    hover:border-obsidian-600/60 transition-all duration-300;
+  }
+
+  .glow-volt {
+    box-shadow: 0 0 40px rgba(193, 255, 26, 0.15);
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-volt-300 to-volt-100 bg-clip-text text-transparent;
+  }
+
+  .noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  }
+}
+
+@layer utilities {
+  .animation-delay-100 { animation-delay: 100ms; }
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
+  .animation-delay-400 { animation-delay: 400ms; }
+  .animation-delay-500 { animation-delay: 500ms; }
+}
