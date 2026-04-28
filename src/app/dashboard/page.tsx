@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import LZString from "lz-string";
 import { useAppStore } from "@/store/appStore";
 import { ProductForm } from "@/components/forms/ProductForm";
 import { SalesPagePreview } from "@/components/preview/SalesPagePreview";
@@ -14,6 +15,7 @@ export default function DashboardPage() {
     output,
     resetInput,
     setOutput,
+    isGenerating,
     setIsGenerating,
     selectedTemplate,
     setCurrentPageId,
@@ -22,6 +24,7 @@ export default function DashboardPage() {
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
   const [lastInput, setLastInput] = useState<ProductInput | null>(null);
+  const [isRegenerating, setIsRegenerating] = useState(false);
 
   const handleGenerate = async (data: ProductInput) => {
     setError("");
@@ -67,8 +70,19 @@ export default function DashboardPage() {
   };
 
   const handleRegenerate = async () => {
-    if (!lastInput) return;
-    await handleGenerate(lastInput);
+    const sourceInput = lastInput ?? input;
+
+    if (!sourceInput) return;
+
+    try {
+      setIsRegenerating(true);
+      setIsGenerating(true);
+
+      await handleGenerate(sourceInput as ProductInput);
+    } finally {
+      setIsRegenerating(false);
+      setIsGenerating(false);
+    }
   };
 
   const handlePreview = () => {
@@ -76,7 +90,9 @@ export default function DashboardPage() {
 
     const productName = lastInput?.productName ?? input?.productName ?? "";
 
-    const encodedData = encodeURIComponent(JSON.stringify(output));
+    const encodedData = LZString.compressToEncodedURIComponent(
+      JSON.stringify(output),
+    );
 
     const url = `/export?data=${encodedData}&productName=${encodeURIComponent(
       productName,
@@ -134,9 +150,19 @@ export default function DashboardPage() {
                   )}
                   <button
                     onClick={handleRegenerate}
-                    className="btn-secondary text-sm py-2"
+                    disabled={isRegenerating || isGenerating}
+                    className={`btn-secondary text-sm py-2 flex items-center gap-2 ${
+                      isRegenerating ? "opacity-60 cursor-not-allowed" : ""
+                    }`}
                   >
-                    ↻ Regenerate
+                    {isRegenerating ? (
+                      <>
+                        <span className="animate-spin">⟳</span>
+                        Regenerating...
+                      </>
+                    ) : (
+                      <>↻ Regenerate</>
+                    )}
                   </button>
                   <button
                     onClick={handlePreview}
