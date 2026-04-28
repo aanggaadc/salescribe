@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import LZString from "lz-string";
 import { useRouter } from "next/navigation";
 import { SavedPage } from "@/types";
 import { useAppStore } from "@/store/appStore";
-import { generateExportHTML } from "@/lib/exportHtml";
 
 import { Eye, RefreshCw, Download, Trash2, Pencil } from "lucide-react";
 
@@ -61,9 +61,11 @@ export default function PagesPage() {
   const handlePreview = (page: SavedPage) => {
     if (!page.outputData) return;
 
-    const encodedData = encodeURIComponent(JSON.stringify(page.outputData));
+    const compressed = LZString.compressToEncodedURIComponent(
+      JSON.stringify(page.outputData),
+    );
 
-    const url = `/export?data=${encodedData}&productName=${encodeURIComponent(
+    const url = `/export?data=${compressed}&productName=${encodeURIComponent(
       page.productName,
     )}&template=${page.template}`;
 
