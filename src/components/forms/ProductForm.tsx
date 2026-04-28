@@ -100,6 +100,7 @@ export function ProductForm({ onGenerate }: ProductFormProps) {
         <input
           name="productName"
           value={input.productName}
+          onChange={(e) => setInput({ productName: e.target.value })}
           placeholder="e.g. TaskFlow Pro, Overnight Oats Meal Kit"
           className={`input-field ${errors.productName ? "border-red-500/60 focus:ring-red-500/30" : ""}`}
         />
@@ -114,6 +115,7 @@ export function ProductForm({ onGenerate }: ProductFormProps) {
         <textarea
           name="description"
           value={input.description}
+          onChange={(e) => setInput({ description: e.target.value })}
           rows={4}
           placeholder="Describe what your product does, how it works, and what problem it solves..."
           className={`input-field resize-none ${errors.description ? "border-red-500/60" : ""}`}
@@ -167,6 +169,7 @@ export function ProductForm({ onGenerate }: ProductFormProps) {
         <input
           name="targetAudience"
           value={input.targetAudience}
+          onChange={(e) => setInput({ targetAudience: e.target.value })}
           placeholder="e.g. Busy professionals aged 25-45 who want to eat healthy but lack time"
           className={`input-field ${errors.targetAudience ? "border-red-500/60" : ""}`}
         />
@@ -181,6 +184,7 @@ export function ProductForm({ onGenerate }: ProductFormProps) {
         <input
           name="price"
           value={input.price}
+          onChange={(e) => setInput({ price: e.target.value })}
           placeholder="e.g. $29/month, $199 one-time, Free with premium at $49/year"
           className={`input-field ${errors.price ? "border-red-500/60" : ""}`}
         />
