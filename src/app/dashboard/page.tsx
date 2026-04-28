@@ -131,27 +131,31 @@ export default function DashboardPage() {
         <div id="preview-section">
           {output ? (
             <div>
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                {/* Title */}
                 <h2 className="font-display font-semibold text-white text-lg flex items-center gap-2">
                   Live Preview
                 </h2>
-                <div className="flex gap-2">
+
+                {/* Actions */}
+                <div className="flex flex-col sm:flex-row flex-wrap gap-2 w-full md:w-auto">
                   <button
                     onClick={handleGenerateNew}
-                    className="btn-secondary text-sm py-2"
+                    className="btn-secondary text-sm py-2 w-full sm:w-auto"
                   >
                     + Generate New
                   </button>
 
                   {saved && (
-                    <span className="text-xs text-volt-400 bg-volt-400/10 border border-volt-400/20 px-3 py-1.5 rounded-full font-medium">
+                    <span className="text-xs text-volt-400 bg-volt-400/10 border border-volt-400/20 px-3 py-1.5 rounded-full font-medium w-full sm:w-auto text-center">
                       ✓ Auto-saved
                     </span>
                   )}
+
                   <button
                     onClick={handleRegenerate}
                     disabled={isRegenerating || isGenerating}
-                    className={`btn-secondary text-sm py-2 flex items-center gap-2 ${
+                    className={`btn-secondary text-sm py-2 flex items-center justify-center gap-2 w-full sm:w-auto ${
                       isRegenerating ? "opacity-60 cursor-not-allowed" : ""
                     }`}
                   >
@@ -164,9 +168,10 @@ export default function DashboardPage() {
                       <>↻ Regenerate</>
                     )}
                   </button>
+
                   <button
                     onClick={handlePreview}
-                    className="btn-primary text-sm py-2 flex items-center gap-2"
+                    className="btn-primary text-sm py-2 flex items-center justify-center gap-2 w-full sm:w-auto"
                   >
                     <Eye /> Preview Page
                   </button>
