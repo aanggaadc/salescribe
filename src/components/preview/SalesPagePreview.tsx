@@ -159,16 +159,16 @@ function BoldTemplate({
       {/* Hero */}
       <section className="px-6 py-24 border-b-4 border-yellow-400">
         <div className="max-w-4xl mx-auto">
-          <div className="text-yellow-400 font-mono text-sm uppercase tracking-widest mb-4">
+          <div className="text-yellow-400 font-mono text-xs md:text-sm uppercase tracking-widest mb-4">
             ⚡ {productName}
           </div>
-          <h1 className="text-5xl md:text-7xl font-black leading-none mb-6 uppercase tracking-tight">
+          <h1 className="text-3xl md:text-5xl lg:text-5xl font-black leading-none mb-6 uppercase tracking-tight">
             {data.headline}
           </h1>
-          <p className="text-xl text-gray-300 mb-10 max-w-2xl leading-relaxed border-l-4 border-yellow-400 pl-4">
+          <p className="text-md md:text-xl text-gray-300 mb-10 max-w-2xl leading-relaxed border-l-4 border-yellow-400 pl-4">
             {data.subheadline}
           </p>
-          <button className="bg-yellow-400 hover:bg-yellow-300 text-black font-black px-10 py-5 text-xl uppercase tracking-wide transition-all hover:-translate-y-1">
+          <button className="bg-yellow-400 hover:bg-yellow-300 text-black font-black px-10 py-5 text-sm md:text-xl uppercase tracking-wide transition-all hover:-translate-y-1">
             {data.cta} →
           </button>
         </div>
@@ -177,7 +177,7 @@ function BoldTemplate({
       {/* Description */}
       <section className="px-6 py-12 bg-yellow-400 text-black">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="text-2xl font-bold leading-relaxed">
+          <p className="text-lg md:text-2xl font-bold leading-relaxed">
             {data.description}
           </p>
         </div>
@@ -186,7 +186,7 @@ function BoldTemplate({
       {/* Benefits */}
       <section className="px-6 py-16">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-black uppercase mb-10 border-b-4 border-yellow-400 pb-4">
+          <h2 className="text-lg md:text-2xl lg:text-4xl font-black uppercase mb-10 border-b-4 border-yellow-400 pb-4">
             What you get:
           </h2>
           <div className="space-y-4">
@@ -195,7 +195,7 @@ function BoldTemplate({
                 <span className="text-yellow-400 font-black text-2xl">
                   0{i + 1}
                 </span>
-                <p className="text-lg text-gray-200 pt-1">{b}</p>
+                <p className="text-md md:text-lg text-gray-200 pt-1">{b}</p>
               </div>
             ))}
           </div>
@@ -205,7 +205,7 @@ function BoldTemplate({
       {/* Social Proof */}
       <section className="bg-gray-900 px-6 py-12">
         <div className="max-w-3xl mx-auto">
-          <p className="text-2xl font-bold text-yellow-400 italic">
+          <p className="text-lg md:text-2xl font-bold text-yellow-400 italic">
             &ldquo;{data.socialProof}&rdquo;
           </p>
         </div>
@@ -214,14 +214,14 @@ function BoldTemplate({
       {/* Pricing */}
       <section className="px-6 py-16">
         <div className="max-w-2xl mx-auto border-4 border-yellow-400 p-10">
-          <h2 className="text-4xl font-black uppercase mb-6">
+          <h2 className="text-lg md:text-2xl lg:text-4xl font-black uppercase mb-6">
             The Investment:
           </h2>
           <p className="text-xl mb-4">{data.pricing}</p>
           {data.guarantee && (
             <p className="text-gray-400 text-sm mb-8">🛡️ {data.guarantee}</p>
           )}
-          <button className="bg-yellow-400 hover:bg-yellow-300 text-black font-black px-12 py-5 text-xl uppercase tracking-wide w-full transition-all">
+          <button className="bg-yellow-400 hover:bg-yellow-300 text-black font-black px-12 py-5 text-md md:text-xl uppercase tracking-wide w-full transition-all">
             {data.cta} →
           </button>
         </div>
