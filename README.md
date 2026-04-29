@@ -96,6 +96,7 @@ src/
 │   │   └── pages/        # CRUD for saved pages
 │   ├── auth/             # Login & Register pages
 │   ├── dashboard/        # Main app (protected)
+│   ├── export/           # Preview and export HTML static file page
 │   └── page.tsx          # Landing page
 ├── components/
 │   ├── forms/            # ProductForm
@@ -107,7 +108,6 @@ src/
 │   ├── gemini.ts         # Gemini AI integration
 │   ├── prisma.ts         # Prisma client
 │   ├── validations.ts    # Zod schemas
-│   └── exportHtml.ts     # HTML export utility
 ├── store/
 │   └── appStore.ts       # Zustand store
 └── types/
