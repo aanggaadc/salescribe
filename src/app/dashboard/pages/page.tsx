@@ -167,24 +167,6 @@ export default function PagesPage() {
                     <span className="hidden md:inline ml-2">Preview</span>
                   </button>
 
-                  {/* Regenerate */}
-                  <button
-                    onClick={() => handleRegenerate(page)}
-                    disabled={regeneratingId === page.id}
-                    className="btn-secondary flex items-center justify-center p-2 sm:px-4 sm:py-2"
-                    title="Regenerate"
-                  >
-                    <RefreshCw
-                      size={16}
-                      className={
-                        regeneratingId === page.id ? "animate-spin" : ""
-                      }
-                    />
-                    <span className="hidden md:inline ml-2">
-                      {regeneratingId === page.id ? "..." : "Regenerate"}
-                    </span>
-                  </button>
-
                   {/* Delete */}
                   <button
                     onClick={() => handleDelete(page.id)}

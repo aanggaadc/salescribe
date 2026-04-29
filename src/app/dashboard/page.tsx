@@ -16,6 +16,7 @@ export default function DashboardPage() {
     resetInput,
     setOutput,
     isGenerating,
+    currentPageId,
     setIsGenerating,
     selectedTemplate,
     setCurrentPageId,
@@ -70,15 +71,43 @@ export default function DashboardPage() {
   };
 
   const handleRegenerate = async () => {
-    const sourceInput = lastInput ?? input;
+    const sourceInput = input ?? lastInput;
 
     if (!sourceInput) return;
 
     try {
       setIsRegenerating(true);
       setIsGenerating(true);
+      setError("");
 
-      await handleGenerate(sourceInput as ProductInput);
+      const existingPageId = currentPageId || pageId;
+
+      if (existingPageId) {
+        const res = await fetch(`/api/pages/${existingPageId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "regenerate",
+            input: sourceInput,
+            template: selectedTemplate,
+          }),
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) {
+          setError(result.error || "Regeneration failed.");
+          return;
+        }
+
+        const updatedPage = result.page;
+
+        setOutput(JSON.parse(updatedPage.outputData));
+        setLastInput(sourceInput as ProductInput);
+        setSaved(true);
+      } else {
+        await handleGenerate(sourceInput as ProductInput);
+      }
     } finally {
       setIsRegenerating(false);
       setIsGenerating(false);
@@ -141,6 +170,7 @@ export default function DashboardPage() {
                 <div className="flex flex-col sm:flex-row flex-wrap gap-2 w-full md:w-auto">
                   <button
                     onClick={handleGenerateNew}
+                    disabled={isRegenerating || isGenerating}
                     className="btn-secondary text-sm py-2 w-full sm:w-auto"
                   >
                     + Generate New
@@ -171,6 +201,7 @@ export default function DashboardPage() {
 
                   <button
                     onClick={handlePreview}
+                    disabled={isRegenerating || isGenerating}
                     className="btn-primary text-sm py-2 flex items-center justify-center gap-2 w-full sm:w-auto"
                   >
                     <Eye /> Preview Page

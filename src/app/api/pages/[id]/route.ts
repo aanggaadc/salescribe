@@ -5,8 +5,11 @@ import { generateSalesPage } from "@/lib/gemini";
 import { prisma } from "@/lib/prisma";
 import { ProductInput } from "@/types";
 
-export async function GET(req: NextRequest, context: any) {
-  const { params } = context as { params: { id: string } };
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
 
   try {
     const session = await getServerSession(authOptions);
@@ -15,7 +18,7 @@ export async function GET(req: NextRequest, context: any) {
     }
 
     const page = await prisma.salesPage.findFirst({
-      where: { id: params.id, userId: session.user.id },
+      where: { id, userId: session.user.id },
     });
 
     if (!page) {
@@ -31,8 +34,11 @@ export async function GET(req: NextRequest, context: any) {
   }
 }
 
-export async function DELETE(req: NextRequest, context: any) {
-  const { params } = context as { params: { id: string } };
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
 
   try {
     const session = await getServerSession(authOptions);
@@ -41,7 +47,7 @@ export async function DELETE(req: NextRequest, context: any) {
     }
 
     await prisma.salesPage.deleteMany({
-      where: { id: params.id, userId: session.user.id },
+      where: { id, userId: session.user.id },
     });
 
     return NextResponse.json({ message: "Page deleted" });
@@ -53,8 +59,11 @@ export async function DELETE(req: NextRequest, context: any) {
   }
 }
 
-export async function PATCH(req: NextRequest, context: any) {
-  const { params } = context as { params: { id: string } };
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
 
   try {
     const session = await getServerSession(authOptions);
@@ -66,7 +75,7 @@ export async function PATCH(req: NextRequest, context: any) {
     const { action, template } = body;
 
     const existingPage = await prisma.salesPage.findFirst({
-      where: { id: params.id, userId: session.user.id },
+      where: { id, userId: session.user.id },
     });
 
     if (!existingPage) {
@@ -74,23 +83,23 @@ export async function PATCH(req: NextRequest, context: any) {
     }
 
     if (action === "regenerate") {
-      const input: ProductInput = JSON.parse(existingPage.inputData);
+      const newInput: ProductInput | null = body.input ?? null;
+
+      const input: ProductInput = newInput
+        ? newInput
+        : JSON.parse(existingPage.inputData);
 
       const output = await generateSalesPage(input);
 
       const updated = await prisma.salesPage.update({
-        where: { id: params.id },
-        data: { outputData: JSON.stringify(output) },
+        where: { id },
+        data: {
+          inputData: JSON.stringify(input),
+          outputData: JSON.stringify(output),
+          template: template || existingPage.template,
+        },
       });
 
-      return NextResponse.json({ page: updated });
-    }
-
-    if (template) {
-      const updated = await prisma.salesPage.update({
-        where: { id: params.id },
-        data: { template },
-      });
       return NextResponse.json({ page: updated });
     }
 
