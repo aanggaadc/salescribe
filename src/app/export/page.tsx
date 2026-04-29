@@ -58,11 +58,13 @@ export default async function ExportPage({ searchParams }: Props) {
 
   return (
     <>
-      <SalesPagePreview
-        data={data}
-        productName={productName}
-        template={params.template}
-      />
+      <div id="export">
+        <SalesPagePreview
+          data={data}
+          productName={productName}
+          template={params.template}
+        />
+      </div>
 
       <DownloadHTMLButton productName={productName} />
     </>

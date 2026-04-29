@@ -2,24 +2,30 @@
 
 export function DownloadHTMLButton({ productName }: { productName: string }) {
   const handleDownload = () => {
-    const clone = document.documentElement.cloneNode(true) as HTMLElement;
+    const content = document.querySelector("#export")?.innerHTML || "";
 
-    // ❌ remove Next.js & scripts
-    clone.querySelectorAll("script").forEach((el) => el.remove());
+    const html = `<!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            
+            <title>${productName}</title>
 
-    // ❌ remove button itself
-    const btn = clone.querySelector("#download-btn");
-    if (btn) btn.remove();
+            <!-- Tailwind CDN (optional, see improvement below) -->
+            <script src="https://cdn.tailwindcss.com"></script>
 
-    // ❌ remove Next.js attributes (biar clean HTML)
-    clone
-      .querySelectorAll("[data-nextjs-react-root]")
-      .forEach((el) => el.removeAttribute("data-nextjs-react-root"));
-    clone
-      .querySelectorAll("[data-reactroot]")
-      .forEach((el) => el.removeAttribute("data-reactroot"));
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
 
-    const html = "<!DOCTYPE html>\n" + clone.outerHTML;
+            <style>
+              body { font-family: 'Inter', system-ui, sans-serif; }
+            </style>
+          </head>
+          <body>
+            ${content}
+          </body>
+        </html>
+     `;
 
     const blob = new Blob([html], { type: "text/html" });
     const url = URL.createObjectURL(blob);
