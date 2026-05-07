@@ -5,8 +5,8 @@ import LZString from "lz-string";
 import { useAppStore } from "@/store/appStore";
 import { ProductForm } from "@/components/forms/ProductForm";
 import { SalesPagePreview } from "@/components/preview/SalesPagePreview";
+import { SectionRegenerator } from "@/components/preview/SectionRegenerator";
 import { ProductInput, SalesPageOutput } from "@/types";
-
 import { Eye } from "lucide-react";
 
 export default function DashboardPage() {
@@ -26,6 +26,8 @@ export default function DashboardPage() {
   const [saved, setSaved] = useState(false);
   const [lastInput, setLastInput] = useState<ProductInput | null>(null);
   const [isRegenerating, setIsRegenerating] = useState(false);
+
+  const activePageId = currentPageId || pageId;
 
   const handleGenerate = async (data: ProductInput) => {
     setError("");
@@ -49,7 +51,6 @@ export default function DashboardPage() {
       setCurrentPageId(result.pageId);
       setLastInput(data);
       setSaved(true);
-      // Scroll to preview
       setTimeout(() => {
         document
           .getElementById("preview-section")
@@ -59,6 +60,7 @@ export default function DashboardPage() {
       setIsGenerating(false);
     }
   };
+
   const handleGenerateNew = () => {
     resetInput();
     setOutput(null);
@@ -66,13 +68,11 @@ export default function DashboardPage() {
     setLastInput(null);
     setSaved(false);
     setError("");
-
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleRegenerate = async () => {
     const sourceInput = input ?? lastInput;
-
     if (!sourceInput) return;
 
     try {
@@ -94,14 +94,12 @@ export default function DashboardPage() {
         });
 
         const result = await res.json();
-
         if (!res.ok) {
           setError(result.error || "Regeneration failed.");
           return;
         }
 
         const updatedPage = result.page;
-
         setOutput(JSON.parse(updatedPage.outputData));
         setLastInput(sourceInput as ProductInput);
         setSaved(true);
@@ -114,19 +112,17 @@ export default function DashboardPage() {
     }
   };
 
+  const handleSectionRegenerated = (updatedOutput: SalesPageOutput) => setOutput(updatedOutput);
+  
   const handlePreview = () => {
     if (!output || (!lastInput && !input)) return;
-
     const productName = lastInput?.productName ?? input?.productName ?? "";
-
     const encodedData = LZString.compressToEncodedURIComponent(
       JSON.stringify(output),
     );
-
     const url = `/export?data=${encodedData}&productName=${encodeURIComponent(
       productName,
     )}&template=${selectedTemplate}`;
-
     window.open(url, "_blank");
   };
 
@@ -157,16 +153,15 @@ export default function DashboardPage() {
         </div>
 
         {/* Preview panel */}
-        <div id="preview-section">
+        <div id="preview-section" className="space-y-4">
           {output ? (
-            <div>
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-                {/* Title */}
+            <>
+              {/* Toolbar */}
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <h2 className="font-display font-semibold text-white text-lg flex items-center gap-2">
                   Live Preview
                 </h2>
 
-                {/* Actions */}
                 <div className="flex flex-col sm:flex-row flex-wrap gap-2 w-full md:w-auto">
                   <button
                     onClick={handleGenerateNew}
@@ -195,7 +190,7 @@ export default function DashboardPage() {
                         Regenerating...
                       </>
                     ) : (
-                      <>↻ Regenerate</>
+                      <>↻ Regenerate All</>
                     )}
                   </button>
 
@@ -204,13 +199,23 @@ export default function DashboardPage() {
                     disabled={isRegenerating || isGenerating}
                     className="btn-primary text-sm py-2 flex items-center justify-center gap-2 w-full sm:w-auto"
                   >
-                    <Eye /> Preview Page
+                    <Eye size={15} /> Preview Page
                   </button>
                 </div>
               </div>
 
+              {/* Section Regenerator — shown only when page is saved */}
+              {activePageId && (
+                <SectionRegenerator
+                  pageId={activePageId}
+                  lastInput={lastInput}
+                  disabled={isRegenerating || isGenerating}
+                  onRegenerated={handleSectionRegenerated}
+                />
+              )}
+
+              {/* Browser preview */}
               <div className="rounded-2xl overflow-hidden border border-obsidian-700/40 shadow-2xl shadow-obsidian-950">
-                {/* Browser chrome */}
                 <div className="bg-obsidian-800 px-4 py-3 flex items-center gap-2 border-b border-obsidian-700/40">
                   <div className="flex gap-1.5">
                     <div className="w-3 h-3 rounded-full bg-red-500/60" />
@@ -219,7 +224,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="flex-1 bg-obsidian-900/60 rounded-md h-6 px-3 flex items-center">
                     <span className="text-obsidian-400 text-xs font-mono">
-                      {lastInput?.productName
+                      {(lastInput?.productName ?? input?.productName ?? "")
                         .toLowerCase()
                         .replace(/\s+/g, "-")}
                       .com
@@ -236,7 +241,7 @@ export default function DashboardPage() {
                   />
                 </div>
               </div>
-            </div>
+            </>
           ) : (
             <div className="card h-full min-h-[400px] flex flex-col items-center justify-center text-center">
               <div className="w-16 h-16 rounded-2xl bg-obsidian-800 flex items-center justify-center text-3xl mb-4">
