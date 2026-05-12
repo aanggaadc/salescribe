@@ -210,6 +210,7 @@ export default function DashboardPage() {
                   pageId={activePageId}
                   lastInput={lastInput}
                   disabled={isRegenerating || isGenerating}
+                  setIsGenerating={setIsGenerating}
                   onRegenerated={handleSectionRegenerated}
                 />
               )}

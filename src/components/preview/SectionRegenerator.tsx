@@ -85,6 +85,7 @@ interface Props {
   lastInput: ProductInput | null;
   pageId: string;
   disabled?: boolean;
+  setIsGenerating: (val: boolean) => void;
   onRegenerated: (updatedOutput: SalesPageOutput) => void;
 }
 
@@ -92,6 +93,7 @@ export function SectionRegenerator({
   lastInput,
   pageId,
   disabled = false,
+  setIsGenerating,
   onRegenerated,
 }: Props) {
   const { input } = useAppStore();
@@ -122,6 +124,7 @@ export function SectionRegenerator({
     if (selected.size === 0) return;
     setError("");
     setLoading(true);
+    setIsGenerating(true)
 
     try {
       const inputSource = input ?? lastInput;
@@ -146,6 +149,7 @@ export function SectionRegenerator({
       onRegenerated(data.output);
     } finally {
       setLoading(false);
+      setIsGenerating(false)
     }
   };
 
